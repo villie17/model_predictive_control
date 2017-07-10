@@ -6,7 +6,7 @@
 using CppAD::AD;
 
 // DONE: Set the timestep length and duration
-size_t N = 20;
+size_t N = 25;
 double dt = 0.05;
 
 // This value assumes the model presented in the classroom is used.
@@ -20,7 +20,7 @@ double dt = 0.05;
 //
 // This is the length from front to CoG that has a similar radius.
 const double Lf = 2.67;
-double ref_v = 40;
+double ref_v = 30 * (1609.34/3600.0);
 
 
 // The solver takes all the state variables and actuator
@@ -56,7 +56,7 @@ class FG_eval {
 			fg[0] += CppAD::pow(vars[delta_start + t], 2);
 			fg[0] += CppAD::pow(vars[a_start + t], 2);
 			if (t < N - 2){
-				fg[0] += 10*CppAD::pow(vars[delta_start + t +1]- vars[delta_start+t], 2);
+				fg[0] += 200*CppAD::pow(vars[delta_start + t +1]- vars[delta_start+t], 2);
 				fg[0] += CppAD::pow(vars[a_start + t + 1] - vars[a_start + t], 2);
 			}
 		}
@@ -259,7 +259,7 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs, Eigen::
   }
 
   // Use value
-  int use_val = 1;
+  int use_val = 0;
   return {solution.x[x_start + 1],   solution.x[y_start + 1],
             solution.x[psi_start + 1], solution.x[v_start + 1],
             solution.x[cte_start + 1], solution.x[epsi_start + 1],

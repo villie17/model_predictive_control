@@ -94,6 +94,9 @@ int main() {
           double py = j[1]["y"];
           double psi = j[1]["psi"];
           double v = j[1]["speed"];
+          double delta = j[1]["steering_angle"];
+          // Convert from mph to m/s
+          v = v*(1609.34/3600.0);
 
 
           Eigen::VectorXd local_pts_x(ptsx.size());
@@ -132,6 +135,13 @@ int main() {
           Eigen::VectorXd state(6);
 
           state << px, py, psi, v, cte, epsi;
+
+          state[0] = v * cos(0) * 0.1;
+          state[1] = v * sin(0) * 0.1;
+          state[2] = (-v / 2.67) * delta * 0.1;
+          state[3] = v ;//+ a * 0.1;
+          state[4] = cte + v*sin(epsi)*0.1;
+          state[5] = epsi - (v / 2.67) * delta * 0.1;
 
           //Display the MPC predicted trajectory
 		  vector<double> mpc_x_vals(N);
